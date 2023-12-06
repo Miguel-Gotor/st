@@ -105,7 +105,7 @@ void ttyresize(int, int);
 void ttywrite(const char *, size_t, int);
 
 void resettitle(void);
-
+void newterm(const Arg *);
 void selclear(void);
 void selinit(void);
 void selstart(int, int, int);

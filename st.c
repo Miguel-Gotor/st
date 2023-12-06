@@ -176,6 +176,7 @@ static void strdump(void);
 static void strhandle(void);
 static void strparse(void);
 static void strreset(void);
+static char *getcwd_by_pid(pid_t pid);
 
 static void tprinter(char *, size_t);
 static void tdumpsel(void);
@@ -2807,6 +2808,25 @@ draw(void)
 		xximspot(term.ocx, term.ocy);
 }
 
+void
+newterm(const Arg* a)
+{
+	switch (fork()) {
+	case -1:
+		die("fork failed: %s\n", strerror(errno));
+		break;
+	case 0:
+		chdir(getcwd_by_pid(pid));
+		execlp("st", "./st", NULL);
+		break;
+	}
+}
+
+static char *getcwd_by_pid(pid_t pid) {
+	char buf[32];
+	snprintf(buf, sizeof buf, "/proc/%d/cwd", pid);
+	return realpath(buf, NULL);
+}
 void
 redraw(void)
 {
