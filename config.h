@@ -5,8 +5,9 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "mono:pixelsize=12:antialias=true:autohint=true";
-static char *font2[] = { "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true" };
+// static char *font = "mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "Iosevka Comfy:size=12:antialias=true:autohint=true:style=SemiBold";
+static char *font2[] = { "FontAwesome:size=14:antialias=true:autohint=true" };
 static int borderpx = 2;
 
 /*
@@ -102,7 +103,7 @@ char *termname = "st-256color";
  * -a` »tab0« should appear. You can tell the terminal to not expand tabs by
  *  running following command:
  *
- *	stty tabs
+ *	stty ta1bs
  */
 unsigned int tabspaces = 8;
 
@@ -241,6 +242,7 @@ static MouseShortcut mshortcuts[] = {
 /* Internal keyboard shortcuts. */
 #define MODKEY Mod1Mask
 #define TERMMOD (Mod1Mask|ShiftMask)
+#define CLIPMASK (ControlMask|ShiftMask)
 
 static char *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -o", "externalpipe", NULL };
 static char *copyurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -c", "externalpipe", NULL };
@@ -249,41 +251,55 @@ static char *copyoutput[] = { "/bin/sh", "-c", "st-copyout", "externalpipe", NUL
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function        argument */
 	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ MODKEY,               XK_c,           clipcopy,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      clippaste,      {.i =  0} },
-	{ MODKEY,               XK_v,           clippaste,      {.i =  0} },
+
+	// VSCode-like zoom
+	{ ControlMask,          XK_plus,        zoom,           {.f = +1} },
+	{ ControlMask,          XK_minus,       zoom,           {.f = -1} },
+	{ ControlMask,          XK_Home,        zoomreset,      {.f =  0} },
+
+	{ CLIPMASK,              XK_C,           clipcopy,       {.i =  0} },
+	{ CLIPMASK,              XK_V,           clippaste,      {.i =  0} },
+
+	// TODO: Find out how to make clipboard copy/paste "case-insensitive" so it works regardles of Caps Lock state
+	// { MYMASK1,              XK_c,           clipcopy,       {.i =  0} },
+	// { MYMASK1,              XK_v,           clippaste,      {.i =  0} },
+
+	// Don't need to touch the mouse to selpaste
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
-	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
-	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+
+	// { TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+
+	// { ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
+	// { ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+
 	{ MODKEY,               XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ MODKEY,               XK_Page_Down,   kscrolldown,    {.i = -1} },
-	{ MODKEY,               XK_k,           kscrollup,      {.i =  1} },
-	{ MODKEY,               XK_j,           kscrolldown,    {.i =  1} },
+
+	// { MODKEY,               XK_k,           kscrollup,      {.i =  1} },
+	// { MODKEY,               XK_j,           kscrolldown,    {.i =  1} },
+
 	{ MODKEY,               XK_Up,          kscrollup,      {.i =  1} },
 	{ MODKEY,               XK_Down,        kscrolldown,    {.i =  1} },
-	{ MODKEY,               XK_u,           kscrollup,      {.i = -1} },
-	{ MODKEY,               XK_d,           kscrolldown,    {.i = -1} },
-	{ MODKEY,		XK_s,		changealpha,	{.f = -0.05} },
-	{ MODKEY,		XK_a,		changealpha,	{.f = +0.05} },
-	{ TERMMOD,              XK_Up,          zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Down,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
-	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
-	{ TERMMOD,              XK_U,           zoom,           {.f = +2} },
-	{ TERMMOD,              XK_D,           zoom,           {.f = -2} },
+	// { MODKEY,               XK_u,           kscrollup,      {.i = -1} },
+	// { MODKEY,               XK_d,           kscrolldown,    {.i = -1} },
+	// { MODKEY,		XK_s,		changealpha,	{.f = -0.05} },
+	// { MODKEY,		XK_a,		changealpha,	{.f = +0.05} },
+	// { TERMMOD,           k   XK_Up,          zoom,           {.f = +1} },
+	// { TERMMOD,              XK_Down,        zoom,           {.f = -1} },
+	// { TERMMOD,              XK_K,           zoom,           {.f = +1} },
+	// { TERMMOD,              XK_J,           zoom,           {.f = -1} },
+	// { TERMMOD,              XK_U,           zoom,           {.f = +2} },
+	// { TERMMOD,              XK_D,           zoom,           {.f = -2} },
+
 	{ MODKEY,               XK_l,           externalpipe,   {.v = openurlcmd } },
 	{ MODKEY,               XK_y,           externalpipe,   {.v = copyurlcmd } },
 	{ MODKEY,               XK_o,           externalpipe,   {.v = copyoutput } },
+
+	// From Siduck's fork of st
+	// https://github.com/siduck/st/blob/main/st.c#L1088
+	{ (Mod4Mask|ShiftMask), XK_Return,      newterm,        {.i =  0} },
 };
+
 
 /*
  * Special keys (change & recompile st.info accordingly)
