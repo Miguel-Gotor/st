@@ -8,6 +8,9 @@
 // static char *font = "mono:pixelsize=12:antialias=true:autohint=true";
 static char *font = "Iosevka Comfy:size=12:antialias=true:autohint=true:style=SemiBold";
 static char *font2[] = { "FontAwesome:size=14:antialias=true:autohint=true" };
+// st crashes when rendering emojis despite setting up these as secondary font :(
+// static char *font2[] = { "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true" };
+// static char *font2[] = { "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
 static int borderpx = 2;
 
 /*
@@ -266,6 +269,7 @@ static Shortcut shortcuts[] = {
 
 	// Don't need to touch the mouse to selpaste
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
+	// { ShiftMask,            XK_Left,      selinit,       {.i =  0} },
 
 	// { TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 
